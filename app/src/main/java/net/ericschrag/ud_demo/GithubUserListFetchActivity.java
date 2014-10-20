@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 
 
 public class GithubUserListFetchActivity extends Activity {
@@ -16,6 +18,14 @@ public class GithubUserListFetchActivity extends Activity {
         setContentView(R.layout.activity_github_user_list_fetch);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ListView userList = (ListView) findViewById(R.id.users_list);
+        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, FAKE_NAME_ARRAY);
+        userList.setAdapter(nameAdapter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
