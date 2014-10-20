@@ -8,6 +8,8 @@ import android.view.MenuItem;
 
 public class GithubUserListFetchActivity extends Activity {
 
+    private static final String[] FAKE_NAME_ARRAY = new String[]{"Anna", "Brian", "Cantor", "Diana", "Eric", "Frank", "George", "Harry", "Ingrid", "Michu", "Nero", "Olivia"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
