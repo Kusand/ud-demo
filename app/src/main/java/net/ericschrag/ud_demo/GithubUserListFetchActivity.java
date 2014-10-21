@@ -19,8 +19,6 @@ import retrofit.RestAdapter;
 
 public class GithubUserListFetchActivity extends Activity {
 
-    private static final String[] FAKE_NAME_ARRAY = new String[]{"Anna", "Brian", "Cantor", "Diana", "Eric", "Frank", "George", "Harry", "Ingrid", "Michu", "Nero", "Olivia"};
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,8 +30,6 @@ public class GithubUserListFetchActivity extends Activity {
         super.onResume();
 
         final ListView userList = (ListView) findViewById(R.id.users_list);
-        ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, FAKE_NAME_ARRAY);
-        userList.setAdapter(nameAdapter);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://api.github.com")
