@@ -1,11 +1,20 @@
 package net.ericschrag.ud_demo;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import net.ericschrag.ud_demo.data.GithubService;
+import net.ericschrag.ud_demo.data.model.GithubUser;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.RestAdapter;
 
 
 public class GithubUserListFetchActivity extends Activity {
@@ -22,9 +31,36 @@ public class GithubUserListFetchActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        ListView userList = (ListView) findViewById(R.id.users_list);
+        final ListView userList = (ListView) findViewById(R.id.users_list);
         ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, FAKE_NAME_ARRAY);
         userList.setAdapter(nameAdapter);
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setEndpoint("https://api.github.com")
+                .build();
+
+        final GithubService service = restAdapter.create(GithubService.class);
+
+        new AsyncTask<Void, Void, List<String>>() {
+            @Override
+            protected List<String> doInBackground(Void... params) {
+                service.getUsers();
+                List<String> fetchedNames = new ArrayList<String>();
+                final List<GithubUser> users = service.getUsers();
+                for (GithubUser user : users) {
+                    fetchedNames.add(user.login);
+                }
+                return fetchedNames;
+            }
+
+            @Override
+            protected void onPostExecute(List<String> strings) {
+                String[] fetchedNames = new String[strings.size()];
+                strings.toArray(fetchedNames);
+                ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(GithubUserListFetchActivity.this, android.R.layout.simple_list_item_1, fetchedNames);
+                userList.setAdapter(nameAdapter);
+            }
+        }.execute();
     }
 
     @Override
