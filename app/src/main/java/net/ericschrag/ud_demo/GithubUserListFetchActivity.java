@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -30,6 +31,7 @@ public class GithubUserListFetchActivity extends Activity {
         super.onResume();
 
         final ListView userList = (ListView) findViewById(R.id.users_list);
+        final View spinner = findViewById(R.id.spinner);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setEndpoint("https://api.github.com")
@@ -51,6 +53,8 @@ public class GithubUserListFetchActivity extends Activity {
 
             @Override
             protected void onPostExecute(List<String> strings) {
+                spinner.setVisibility(View.GONE);
+                userList.setVisibility(View.VISIBLE);
                 String[] fetchedNames = new String[strings.size()];
                 strings.toArray(fetchedNames);
                 ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(GithubUserListFetchActivity.this, android.R.layout.simple_list_item_1, fetchedNames);
