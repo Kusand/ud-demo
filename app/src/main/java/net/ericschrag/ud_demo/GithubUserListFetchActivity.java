@@ -3,16 +3,15 @@ package net.ericschrag.ud_demo;
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 import net.ericschrag.ud_demo.data.GithubService;
 import net.ericschrag.ud_demo.data.model.GithubUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit.RestAdapter;
@@ -30,7 +29,7 @@ public class GithubUserListFetchActivity extends Activity {
     protected void onResume() {
         super.onResume();
 
-        final ListView userList = (ListView) findViewById(R.id.users_list);
+        final RecyclerView userList = (RecyclerView) findViewById(R.id.users_list);
         final View spinner = findViewById(R.id.spinner);
 
         RestAdapter restAdapter = new RestAdapter.Builder()
@@ -39,26 +38,20 @@ public class GithubUserListFetchActivity extends Activity {
 
         final GithubService service = restAdapter.create(GithubService.class);
 
-        new AsyncTask<Void, Void, List<String>>() {
+        new AsyncTask<Void, Void, List<GithubUser>>() {
             @Override
-            protected List<String> doInBackground(Void... params) {
-                service.getUsers();
-                List<String> fetchedNames = new ArrayList<String>();
+            protected List<GithubUser> doInBackground(Void... params) {
                 final List<GithubUser> users = service.getUsers();
-                for (GithubUser user : users) {
-                    fetchedNames.add(user.login);
-                }
-                return fetchedNames;
+                return users;
             }
 
             @Override
-            protected void onPostExecute(List<String> strings) {
+            protected void onPostExecute(List<GithubUser> users) {
                 spinner.setVisibility(View.GONE);
                 userList.setVisibility(View.VISIBLE);
-                String[] fetchedNames = new String[strings.size()];
-                strings.toArray(fetchedNames);
-                ArrayAdapter<String> nameAdapter = new ArrayAdapter<String>(GithubUserListFetchActivity.this, android.R.layout.simple_list_item_1, fetchedNames);
-                userList.setAdapter(nameAdapter);
+                RecyclerView.Adapter<UserListRecyclerAdapter.UserHolder> userAdapter = new UserListRecyclerAdapter(users, R.layout.user_list_item);
+                userList.setAdapter(userAdapter);
+                userList.setLayoutManager(new LinearLayoutManager(GithubUserListFetchActivity.this, LinearLayoutManager.VERTICAL, false));
             }
         }.execute();
     }
