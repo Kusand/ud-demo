@@ -1,7 +1,7 @@
 ud-demo
 =======
 
-A sample app playing with the Github API, used during my talk at UD-ACM's dev workshop on Oct. 23, 2014. This talk is will have been targeted at people very new to Android, with the idea that I will walk through the process of making a simple app using remote APIs from the first default Activity Android Studio hands you.
+A sample app playing with the Github API, used during my talk at UD-ACM's dev workshop on Oct. 23, 2014. This talk is will have been targeted at people very new to Android, with the idea that I will walk through the process of making a simple app using remote APIs from the first default Activity Android Studio hands you. I've also started writing up [Talk Notes](https://github.com/Kusand/ud-demo/wiki/Talk-Notes) to try to capture things I wanted to make sure I mentioned.
 
 
 How To Use This
