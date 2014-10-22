@@ -6,7 +6,8 @@ A sample app playing with the Github API, used during my talk at UD-ACM's dev wo
 
 How To Use This
 =======
-If you've never picked up an IDE before, here's what you're going to want to do
+If you've never picked up an IDE before, here's what you're going to want to do:
+
 1. Clone This Repo
 2. Download [Android Studio](https://developer.android.com/sdk/installing/studio.html)
 3. Use the SDK Manager from Android Studio in the Toolbar to install SDK 21, Build Tools 21.0.1, the latest SDK Tools and Platform-Tools, the Android Support Library and Android Support Repository, and honestly basically anything else it suggests.
