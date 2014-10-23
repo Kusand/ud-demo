@@ -101,6 +101,7 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
     @Override
     public void userSelected(GithubUser githubUser) {
         Intent intent = new Intent(this, GithubUserDetailActivity.class);
+        intent.putExtra(GithubUserDetailActivity.USER_LOGIN_NAME, githubUser.login);
         startActivity(intent);
     }
 
