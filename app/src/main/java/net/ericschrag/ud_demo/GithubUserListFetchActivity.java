@@ -102,6 +102,8 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
     public void userSelected(GithubUser githubUser) {
         Intent intent = new Intent(this, GithubUserDetailActivity.class);
         intent.putExtra(GithubUserDetailActivity.USER_LOGIN_NAME, githubUser.login);
+        intent.putExtra(GithubUserDetailActivity.USER_DETAIL_URL, githubUser.url);
+        intent.putExtra(GithubUserDetailActivity.USER_AVATAR_URL, githubUser.avatar_url);
         startActivity(intent);
     }
 
