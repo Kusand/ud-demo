@@ -18,11 +18,13 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
 
     private final List<GithubUser> users;
     private int itemLayoutResource;
+    private final GithubUserSelectedCallback userSelectedCallback;
     private final Picasso picasso;
 
-    public UserListRecyclerAdapter(List<GithubUser> users, int itemLayoutResource, Picasso picasso) {
+    public UserListRecyclerAdapter(List<GithubUser> users, int itemLayoutResource, GithubUserSelectedCallback userSelectedCallback, Picasso picasso) {
         this.users = users;
         this.itemLayoutResource = itemLayoutResource;
+        this.userSelectedCallback = userSelectedCallback;
         this.picasso = picasso;
     }
 
@@ -34,9 +36,15 @@ public class UserListRecyclerAdapter extends RecyclerView.Adapter<UserListRecycl
 
     @Override
     public void onBindViewHolder(UserHolder userHolder, int position) {
-        GithubUser user = users.get(position);
+        final GithubUser user = users.get(position);
         userHolder.nameText.setText(user.login);
         picasso.load(Uri.parse(user.avatar_url)).placeholder(R.color.material_blue_grey_800).into(userHolder.userAvatar);
+        userHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userSelectedCallback.userSelected(user);
+            }
+        });
     }
 
     @Override

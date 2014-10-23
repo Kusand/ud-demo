@@ -1,6 +1,7 @@
 package net.ericschrag.ud_demo;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,7 +27,7 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 
-public class GithubUserListFetchActivity extends Activity {
+public class GithubUserListFetchActivity extends Activity implements GithubUserSelectedCallback {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,7 +69,7 @@ public class GithubUserListFetchActivity extends Activity {
             protected void onPostExecute(List<GithubUser> users) {
                 spinner.setVisibility(View.GONE);
                 userList.setVisibility(View.VISIBLE);
-                RecyclerView.Adapter<UserListRecyclerAdapter.UserHolder> userAdapter = new UserListRecyclerAdapter(users, R.layout.user_list_item, new Picasso.Builder(getApplicationContext()).downloader(new UrlConnectionDownloader(getApplicationContext())).build());
+                RecyclerView.Adapter<UserListRecyclerAdapter.UserHolder> userAdapter = new UserListRecyclerAdapter(users, R.layout.user_list_item, GithubUserListFetchActivity.this, new Picasso.Builder(getApplicationContext()).downloader(new UrlConnectionDownloader(getApplicationContext())).build());
                 userList.setAdapter(userAdapter);
                 userList.setLayoutManager(new LinearLayoutManager(GithubUserListFetchActivity.this, LinearLayoutManager.VERTICAL, false));
             }
@@ -96,4 +97,11 @@ public class GithubUserListFetchActivity extends Activity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void userSelected(GithubUser githubUser) {
+        Intent intent = new Intent(this, GithubUserDetailActivity.class);
+        startActivity(intent);
+    }
+
 }
