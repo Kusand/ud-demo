@@ -4,7 +4,7 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_vertical"
-    android:padding="8dp">
+    android:padding="8dp"
     tools:ignore="UseCompoundDrawables">
 
     <ImageView
@@ -19,7 +19,7 @@
         android:id="@+id/user_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textStyle="bold"/>
 
 </LinearLayout>
