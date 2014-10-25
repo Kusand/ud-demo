@@ -1,9 +1,9 @@
 package net.ericschrag.ud_demo;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -27,7 +27,11 @@ import retrofit.RestAdapter;
 import retrofit.client.OkClient;
 
 
-public class GithubUserListFetchActivity extends Activity implements GithubUserSelectedCallback {
+public class GithubUserListFetchActivity extends ActionBarActivity implements GithubUserSelectedCallback {
+
+    private GithubService githubService;
+    private RecyclerView userList;
+    private View spinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,8 +43,8 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
     protected void onResume() {
         super.onResume();
 
-        final RecyclerView userList = (RecyclerView) findViewById(R.id.users_list);
-        final View spinner = findViewById(R.id.spinner);
+        userList = (RecyclerView) findViewById(R.id.users_list);
+        spinner = findViewById(R.id.spinner);
 
         final OkHttpClient okHttpClient = new OkHttpClient();
         try {
@@ -56,12 +60,19 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
                 .setEndpoint("https://api.github.com")
                 .build();
 
-        final GithubService service = restAdapter.create(GithubService.class);
+        githubService = restAdapter.create(GithubService.class);
 
+        fetchGithubUsers();
+
+    }
+
+    private void fetchGithubUsers() {
+        spinner.setVisibility(View.VISIBLE);
+        userList.setVisibility(View.GONE);
         new AsyncTask<Void, Void, List<GithubUser>>() {
             @Override
             protected List<GithubUser> doInBackground(Void... params) {
-                final List<GithubUser> users = service.getUsers();
+                final List<GithubUser> users = githubService.getUsers();
                 return users;
             }
 
@@ -84,18 +95,19 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        int id = menuItem.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            fetchGithubUsers();
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        return super.onOptionsItemSelected(menuItem);
     }
 
     @Override
@@ -106,5 +118,4 @@ public class GithubUserListFetchActivity extends Activity implements GithubUserS
         intent.putExtra(GithubUserDetailActivity.USER_AVATAR_URL, githubUser.avatar_url);
         startActivity(intent);
     }
-
 }
