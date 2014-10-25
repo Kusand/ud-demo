@@ -10,6 +10,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginRight="8dp"
+        android:contentDescription="@null"
         android:src="#777"/>
 
     <TextView
