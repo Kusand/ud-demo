@@ -6,9 +6,10 @@ import java.util.List;
 
 import retrofit.http.GET;
 import retrofit.http.Headers;
+import rx.Observable;
 
 public interface GithubService {
     @Headers("Accept: application/vnd.github.v3+json")
     @GET("/users")
-    public List<GithubUser> getUsers();
+    public Observable<List<GithubUser>> getUsers();
 }

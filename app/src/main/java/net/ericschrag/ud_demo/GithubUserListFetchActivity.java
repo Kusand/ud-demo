@@ -1,7 +1,6 @@
 package net.ericschrag.ud_demo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +24,9 @@ import java.util.List;
 
 import retrofit.RestAdapter;
 import retrofit.client.OkClient;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
 
 
 public class GithubUserListFetchActivity extends ActionBarActivity implements GithubUserSelectedCallback {
@@ -69,22 +71,20 @@ public class GithubUserListFetchActivity extends ActionBarActivity implements Gi
     private void fetchGithubUsers() {
         spinner.setVisibility(View.VISIBLE);
         userList.setVisibility(View.GONE);
-        new AsyncTask<Void, Void, List<GithubUser>>() {
-            @Override
-            protected List<GithubUser> doInBackground(Void... params) {
-                final List<GithubUser> users = githubService.getUsers();
-                return users;
-            }
+        githubService.getUsers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Action1<List<GithubUser>>() {
+                    @Override
+                    public void call(List<GithubUser> githubUsers) {
+                        spinner.setVisibility(View.GONE);
+                        userList.setVisibility(View.VISIBLE);
+                        RecyclerView.Adapter<UserListRecyclerAdapter.UserHolder> userAdapter = new UserListRecyclerAdapter(githubUsers, R.layout.user_list_item, GithubUserListFetchActivity.this, new Picasso.Builder(getApplicationContext()).downloader(new UrlConnectionDownloader(getApplicationContext())).build());
+                        userList.setAdapter(userAdapter);
+                        userList.setLayoutManager(new LinearLayoutManager(GithubUserListFetchActivity.this, LinearLayoutManager.VERTICAL, false));
+                    }
+                });
 
-            @Override
-            protected void onPostExecute(List<GithubUser> users) {
-                spinner.setVisibility(View.GONE);
-                userList.setVisibility(View.VISIBLE);
-                RecyclerView.Adapter<UserListRecyclerAdapter.UserHolder> userAdapter = new UserListRecyclerAdapter(users, R.layout.user_list_item, GithubUserListFetchActivity.this, new Picasso.Builder(getApplicationContext()).downloader(new UrlConnectionDownloader(getApplicationContext())).build());
-                userList.setAdapter(userAdapter);
-                userList.setLayoutManager(new LinearLayoutManager(GithubUserListFetchActivity.this, LinearLayoutManager.VERTICAL, false));
-            }
-        }.execute();
     }
 
     @Override
