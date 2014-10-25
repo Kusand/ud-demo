@@ -14,9 +14,9 @@
 
     <TextView
         android:id="@+id/user_name"
-        android:text="Username goes here"
         android:layout_below="@+id/user_avatar"
         android:textColor="@android:color/black"
+        tools:text="Sample Username"
         android:textSize="20sp"
         android:textStyle="bold"
         android:layout_width="wrap_content"
